@@ -13,5 +13,6 @@ void print_int(big_int *head);
 void delete_int(big_int* head);
 void copy_int(big_int *original, big_int **copy);
 big_int* divide_big_int(big_int* dividend, big_int* divisor);
+big_int* addition(big_int *a, big_int *b);
 
 #endif

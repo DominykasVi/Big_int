@@ -27,11 +27,11 @@ int main() {
 //    print_int(a);
 //    assign_int(&a, "-22");
 //    print_int(a);
-    assign_int(&a, "1587434871844871438738743867167418741987499741897186374138673186748978");
-    //print_int(a);
-    assign_int(&b, "-1587434871844871438738743867167418741987499741897186374138673186748978");
-    c = divide_big_int(a,b);
-    print_int(c);
+//    assign_int(&a, "1587434871844871438738743867167418741987499741897186374138673186748978");
+//    //print_int(a);
+//    assign_int(&b, "-1587434871844871438738743867167418741987499741897186374138673186748978");
+//    c = divide_big_int(a,b);
+//    print_int(c);
 //    assign_int(&a, "a");
 //    print_int(a);
 //    assign_int(&a, "1587434871a44871438738743867167418741987499741897186374138673186748978");
@@ -40,14 +40,16 @@ int main() {
 //    print_int(a);
 //    assign_int(&a, "1587434871a44871438738743867167418741987499741897186374138673186748978a");
 //    print_int(a);
-
+//
 //    assign_int(&a, "10");
 //    assign_int(&b, "-1");
 //    c = subtract_big_int(a, b);
+//    print_int(c);
 //
 //    assign_int(&a, "-10");
 //    assign_int(&b, "1");
 //    c = subtract_big_int(a, b);
+//    print_int(c);
 //
 //    assign_int(&a, "-10");
 //    assign_int(&b, "-1");
@@ -58,10 +60,11 @@ int main() {
 //    assign_int(&b, "-10");
 //    c = subtract_big_int(a, b);
 //    print_int(c);
-////
-////    assign_int(&a, "0");
-////    assign_int(&b, "-1");
-////    c = subtract_big_int(a, b);
+//
+//    assign_int(&a, "0");
+//    assign_int(&b, "-1");
+//    c = subtract_big_int(a, b);
+//    print_int(c);
 //
 //    assign_int(&a, "0");
 //    assign_int(&b, "1");
