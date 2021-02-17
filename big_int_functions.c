@@ -617,3 +617,72 @@ big_int* divide_big_int(big_int* dividend, big_int* divisor){
     free(divisor_copy);
     return current_quotient;
 }
+big_int* addition(big_int *a, big_int *b){
+    big_int *temp=(big_int*)malloc(sizeof(big_int));
+    memory_Allocation_Check(temp);
+    char sum;
+    int carry=0;
+    
+    while(a->next!=NULL){
+        a=a->next;
+    }
+    while(b->next!=NULL){
+        b=b->next;
+    }
+
+
+    if(a->number+b->number>=10){
+            sum=a->number+ b->number-10;
+            carry=1;
+        }
+        else {
+            sum=sum=a->number+ b->number;
+            carry=0;
+        }
+        temp->next=NULL;
+        temp->previous=NULL;
+        temp->number=sum;
+    
+
+    while(a->previous!=NULL || b->previous!=NULL){
+        if(a->previous==NULL){
+            a->number=0;
+        }
+        else a=a->previous;
+
+        if(b->previous==NULL){
+            b->number=0;
+        }
+        else b=b->previous;
+        
+        big_int *new_node=(big_int*)malloc(sizeof(big_int));
+        memory_Allocation_Check(new_node);
+        if(carry==1){
+            char imaginary_sum=a->number;
+            a->number=imaginary_sum+1;
+            carry=0;
+        }
+        if(a->number+b->number>=10){
+            sum=a->number+ b->number-10;
+            carry=1;
+        }
+        else {
+            sum=a->number+ b->number;
+            carry=0;
+        }
+        new_node->number=sum;
+        new_node->next=temp;
+        new_node->previous=NULL;
+        temp=new_node;
+    }
+    if(carry==1){
+        big_int *new_node=(big_int*)malloc(sizeof(big_int));
+        memory_Allocation_Check(new_node);
+        new_node->number=1;
+        new_node->next=temp;
+        new_node->previous=NULL;
+        temp=new_node;
+    }
+
+    return temp;
+}
