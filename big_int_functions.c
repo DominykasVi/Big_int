@@ -100,7 +100,26 @@ big_int* addition(big_int *a, big_int *b){
     memory_Allocation_Check(temp);
     char sum;
     int carry=0;
-
+    int sign=0;
+    if(a->number<0 && b->number<0) {
+        sign=1;
+        a->number=-1*a->number;
+        b->number=-1*b->number;
+    }
+    else if(a->number>0 && b->number<0) {
+        b->number=-1*b->number;
+        big_int *c=NULL;
+        c=subtract_big_int(a,b);
+        return c;
+    }
+    else if(a->number<0 && b->number>0) {
+        sign=1;
+        a->number=-1*a->number;
+        big_int *c=NULL;
+        c=subtract_big_int(a,b);
+        return c;
+    }
+    
     while(a->next!=NULL){
         a=a->next;
     }
@@ -110,17 +129,17 @@ big_int* addition(big_int *a, big_int *b){
 
 
     if(a->number+b->number>=10){
-        sum=a->number+ b->number-10;
-        carry=1;
-    }
-    else {
-        sum=sum=a->number+ b->number;
-        carry=0;
-    }
-    temp->next=NULL;
-    temp->previous=NULL;
-    temp->number=sum;
-
+            sum=a->number+ b->number-10;
+            carry=1;
+        }
+        else {
+            sum=a->number+ b->number;
+            carry=0;
+        }
+        temp->next=NULL;
+        temp->previous=NULL;
+        temp->number=sum;
+    
 
     while(a->previous!=NULL || b->previous!=NULL){
         if(a->previous==NULL){
@@ -132,7 +151,7 @@ big_int* addition(big_int *a, big_int *b){
             b->number=0;
         }
         else b=b->previous;
-
+        
         big_int *new_node=(big_int*)malloc(sizeof(big_int));
         memory_Allocation_Check(new_node);
         if(carry==1){
@@ -150,6 +169,7 @@ big_int* addition(big_int *a, big_int *b){
         }
         new_node->number=sum;
         new_node->next=temp;
+        temp->previous=new_node;
         new_node->previous=NULL;
         temp=new_node;
     }
@@ -158,11 +178,198 @@ big_int* addition(big_int *a, big_int *b){
         memory_Allocation_Check(new_node);
         new_node->number=1;
         new_node->next=temp;
+        temp->previous=new_node;
         new_node->previous=NULL;
         temp=new_node;
     }
+    while(temp->number==0 && temp->next!=NULL) {
+        big_int *fake=NULL;
+        fake=temp;
+        fake=fake->next;
+        free(temp);
+        temp=fake;
+    }
+    if(sign==0)
+        return temp;
+    else {
+        temp->number=-1*temp->number;
+        return temp;
+    }
+}
+big_int *multiplication(big_int *a,big_int *b){
 
-    return temp;
+    int zero=0;
+    big_int *temp=(big_int*)malloc(sizeof(big_int));
+    memory_Allocation_Check(temp);
+    big_int *answer=(big_int*)malloc(sizeof(big_int));
+    memory_Allocation_Check(answer);
+    big_int *fake_answer=(big_int*)malloc(sizeof(big_int));
+    fake_answer=NULL;
+    char sum=0;
+    int carry=0;
+    int sign=0;
+    if(a->number<0 && b->number<0) {
+        sign=0;
+        a->number=-1*a->number;
+        b->number=-1*b->number;
+    }
+    else if(a->number>0 && b->number<0) {
+        sign=1;
+        b->number=-1*b->number;
+    }
+    else if(a->number<0 && b->number>0) {
+        sign=1;
+        a->number=-1*a->number;
+    }
+    //go to the beggining
+    while(a->next!=NULL){
+        a=a->next;
+    }
+    while(b->next!=NULL){
+        b=b->next;
+    }
+
+    //make the first node
+   if(a->number*b->number>=10){
+       int counter= a->number*b->number;
+       while(counter>=10){
+           carry++;
+           counter-=10;
+       }
+        sum=counter;
+        }
+        else {
+            sum=a->number* b->number;
+            carry=0;
+        }
+        temp->next=NULL;
+        temp->previous=NULL;
+        temp->number=sum;
+
+    //multiplication algorithm   
+    sum=0; 
+
+    answer->next=NULL;
+    answer->previous=NULL;
+    answer->number=0;
+    
+    do{
+        
+        if(zero>0) {
+            b=b->previous;
+            int fake=zero;
+            
+            temp=(big_int*)malloc(sizeof(big_int));
+            temp->next=NULL;
+            temp->previous= NULL;
+            temp->number= 0;
+
+            while(fake>1){
+                big_int *zero = (big_int*)malloc(sizeof(big_int));
+                zero->next=temp;
+                zero->previous=NULL;
+                temp->previous=zero;
+                zero->number=0;
+                temp=zero;
+                fake--;
+            }
+            
+            ///here lies the forbiden code of laziness
+            if(a->number*b->number>=10){
+                int counter= a->number*b->number;
+                while(counter>=10){
+                    carry++;
+                    counter-=10;
+                }
+                 sum=counter;
+             }
+             else {
+                 sum=a->number* b->number;
+                 carry=0;
+             }
+             big_int *new_node=(big_int*)malloc(sizeof(big_int));
+             new_node->next=temp;
+             new_node->previous=NULL;
+             temp->previous=new_node;
+             new_node->number=sum;
+             temp=new_node;
+             sum=0;
+            ///here lies the forbiden code of laziness
+        }
+
+        while(a->previous!=NULL){
+            a=a->previous;
+            big_int *new_node=(big_int*)malloc(sizeof(big_int));
+            memory_Allocation_Check(new_node);
+            if(carry>0){
+                sum=carry;
+                carry=0;
+            }
+            if(a->number*b->number+sum>=10){
+                 int counter= a->number*b->number+sum;
+                 while(counter>=10){
+                    carry++;
+                    counter-=10;
+                 }
+                sum=counter;
+             }
+             else {
+                sum+=a->number * b->number;
+                carry=0;
+             }
+            new_node->number=sum;
+            new_node->next=temp;
+            temp->previous=new_node;///changes
+            new_node->previous=NULL;
+            temp=new_node;
+
+            sum=0;
+        }
+         if(carry>0){
+             big_int *new_node=(big_int*)malloc(sizeof(big_int));
+             memory_Allocation_Check(new_node);
+             new_node->number=carry;
+             new_node->next=temp;
+             temp->previous=new_node;///changes
+             new_node->previous=NULL;
+             temp=new_node;
+         }
+
+        fake_answer=NULL;
+        fake_answer=addition(temp,answer);
+        free_big_int(answer);
+
+        copy_int(fake_answer,&answer);
+        print_int(answer);
+
+
+        free_big_int(fake_answer);
+
+        while(a->next!=NULL) {
+            a=a->next;
+        }
+        
+        free_big_int(temp);
+        carry=0;
+        zero++;
+    }while(b->previous!=NULL);
+
+
+    if(sign==0)
+    return answer;
+    else {
+        answer->number=-1*answer->number;
+        return answer;
+    }
+}
+void free_big_int(big_int *a){
+    big_int* current = a;
+    while( current != NULL ) {
+       big_int* next = current->next;
+       free( current );
+       current = next;
+    }
+    return;
 }
 
 void print_int(big_int *head){
