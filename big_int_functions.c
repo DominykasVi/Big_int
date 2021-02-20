@@ -196,6 +196,17 @@ big_int* addition(big_int *a, big_int *b){
         return temp;
     }
 }
+
+void free_big_int(big_int *a){
+    big_int* current = a;
+    while( current != NULL ) {
+        big_int* next = current->next;
+        free( current );
+        current = next;
+    }
+    return;
+}
+
 big_int *multiplication(big_int *a,big_int *b){
 
     int zero=0;
@@ -340,7 +351,7 @@ big_int *multiplication(big_int *a,big_int *b){
         free_big_int(answer);
 
         copy_int(fake_answer,&answer);
-        print_int(answer);
+        //print_int(answer);
 
 
         free_big_int(fake_answer);
@@ -362,15 +373,8 @@ big_int *multiplication(big_int *a,big_int *b){
         return answer;
     }
 }
-void free_big_int(big_int *a){
-    big_int* current = a;
-    while( current != NULL ) {
-       big_int* next = current->next;
-       free( current );
-       current = next;
-    }
-    return;
-}
+
+
 
 void print_int(big_int *head){
     big_int *current_node = head;
@@ -424,6 +428,7 @@ void copy_int(big_int *original, big_int **copy){
 }
 
 void pure_subtraction(big_int *bigger, big_int* smaller){
+
     int carry = 0;
     char bigger_num;
     char smaller_num;
@@ -474,8 +479,8 @@ void pure_subtraction(big_int *bigger, big_int* smaller){
         --carry;
         if(bigger->number == 0){
             ++carry;
-            bigger->number += 10;
-            bigger = bigger->previous;
+            bigger->number += 9;
+            //bigger = bigger->previous;
         } else {
             --(bigger->number);
         }
@@ -529,7 +534,7 @@ big_int* subtract_big_int(big_int* first_number, big_int* second_number){
     big_int *second_tmp = malloc(sizeof ( big_int));
     memory_Allocation_Check(second_tmp);
     second_tmp = second_copy;
-
+    //see if first is smaller than second
     while (first_tmp->next != NULL || second_tmp->next != NULL){
         if(first_tmp->next == NULL){
             type *= 10;

@@ -105,7 +105,7 @@ int main() {
 //    assign_int(&b, "1");
 //    c = subtract_big_int(a, b);
 //    print_int(c);
-
+//
 //    assign_int(&a, "11325");
 //    assign_int(&b, "12");
 //    c = divide_big_int(a, b);
@@ -120,15 +120,15 @@ int main() {
 //    assign_int(&b, "111");
 //    c = divide_big_int(a, b);
 //    print_int(c);
-
-    assign_int(&a, "10");
-    assign_int(&b, "5");
-    c = divide_big_int(a, b);
-    print_int(c);
-
-    assign_int(&a, "46279953766");
-    assign_int(&b, "666666");
-    c = divide_big_int(a, b);
-    print_int(c);
+////10000000000000000000000000000000
+//    assign_int(&a, "10000000000000000000000000000000");
+//    assign_int(&b, "123132");
+//    c = subtract_big_int(a, b);
+//    print_int(c);
+//
+//    assign_int(&a, "99999999999999999999999999999999999999999999999999999999999999999999999999999999999999");
+//    assign_int(&b, "1");
+//    c = divide_big_int(a, b);
+//    print_int(c);
     return 0;
 }
