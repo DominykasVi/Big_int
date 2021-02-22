@@ -3,11 +3,10 @@
 #include <stdlib.h>
 #include <limits.h>
 
-void delete_int(big_int* head){
-    big_int* tmp;
+void delete_int(big_int *head) {
+    big_int *tmp;
 
-    while (head != NULL)
-    {
+    while (head != NULL) {
         tmp = head;
         head = head->next;
         free(tmp);
@@ -15,11 +14,11 @@ void delete_int(big_int* head){
 
 }
 
-void remove_zeroes(big_int** head){
+void remove_zeroes(big_int **head) {
     big_int *current = *head;
     big_int *previous = NULL;
-    while(current->number == 0){
-        if(current->next == NULL){
+    while (current->number == 0) {
+        if (current->next == NULL) {
             break;
         }
         previous = current;
@@ -31,44 +30,44 @@ void remove_zeroes(big_int** head){
     *head = current;
 }
 
-void memory_Allocation_Check(void* pointer){
-    if(pointer == NULL){
+void memory_Allocation_Check(void *pointer) {
+    if (pointer == NULL) {
         printf("Cannot allocate memory\n");
         exit(1);
     }
 }
 
-void assign_int(big_int** head, char* number){
-    if (*head != NULL){
+void assign_int(big_int **head, char *number) {
+    if (*head != NULL) {
         delete_int(*head);
     }
     *head = NULL;
     long long i = 0;
-    big_int* last_node = (big_int*) malloc (sizeof(struct big_int));
-    while (number[i] != '\0'){
+    big_int *last_node = (big_int *) malloc(sizeof(struct big_int));
+    while (number[i] != '\0') {
 
         char digit = number[i] - 48;
 
-        if(number[i] == '-' && i == 0){
+        if (number[i] == '-' && i == 0) {
             ++i;
-            if(number[i] < 48 || number[i] > 57){
+            if (number[i] < 48 || number[i] > 57) {
                 printf("Not valid input\n");
                 return;
             }
             digit = 0 - (number[i] - 48);
-        } else if(number[i] == '+' && i == 0){
+        } else if (number[i] == '+' && i == 0) {
             ++i;
-            if(number[i] < 48 || number[i] > 57){
+            if (number[i] < 48 || number[i] > 57) {
                 printf("Not valid input\n");
                 return;
             }
             digit = number[i] - 48;
-        } else if (number[i] < 48 || number[i]  >57){
+        } else if (number[i] < 48 || number[i] > 57) {
             *head = NULL;
             printf("Not valid input\n");
             return;
         }
-        big_int* new_node = (big_int*) malloc (sizeof(struct big_int));
+        big_int *new_node = (big_int *) malloc(sizeof(struct big_int));
 
         memory_Allocation_Check(new_node);
 
@@ -86,7 +85,7 @@ void assign_int(big_int** head, char* number){
         }
 
         ++i;
-        if(i == LONG_LONG_MAX){
+        if (i == LONG_LONG_MAX) {
             printf("Max size reached");
             break;
         }
@@ -95,299 +94,286 @@ void assign_int(big_int** head, char* number){
 }
 
 
-big_int* addition(big_int *a, big_int *b){
-    big_int *temp=(big_int*)malloc(sizeof(big_int));
+big_int *add_int(big_int *a, big_int *b) {
+    big_int *temp = (big_int *) malloc(sizeof(big_int));
     memory_Allocation_Check(temp);
     char sum;
-    int carry=0;
-    int sign=0;
-    if(a->number<0 && b->number<0) {
-        sign=1;
-        a->number=-1*a->number;
-        b->number=-1*b->number;
-    }
-    else if(a->number>0 && b->number<0) {
-        b->number=-1*b->number;
-        big_int *c=NULL;
-        c=subtract_big_int(a,b);
+    int carry = 0;
+    int sign = 0;
+    if (a->number < 0 && b->number < 0) {
+        sign = 1;
+        a->number = -1 * a->number;
+        b->number = -1 * b->number;
+    } else if (a->number > 0 && b->number < 0) {
+        b->number = -1 * b->number;
+        big_int *c = NULL;
+        c = subtract_int(a, b);
+        return c;
+    } else if (a->number < 0 && b->number > 0) {
+        sign = 1;
+        a->number = -1 * a->number;
+        big_int *c = NULL;
+        c = subtract_int(a, b);
         return c;
     }
-    else if(a->number<0 && b->number>0) {
-        sign=1;
-        a->number=-1*a->number;
-        big_int *c=NULL;
-        c=subtract_big_int(a,b);
-        return c;
+
+    while (a->next != NULL) {
+        a = a->next;
     }
-    
-    while(a->next!=NULL){
-        a=a->next;
-    }
-    while(b->next!=NULL){
-        b=b->next;
+    while (b->next != NULL) {
+        b = b->next;
     }
 
 
-    if(a->number+b->number>=10){
-            sum=a->number+ b->number-10;
-            carry=1;
-        }
-        else {
-            sum=a->number+ b->number;
-            carry=0;
-        }
-        temp->next=NULL;
-        temp->previous=NULL;
-        temp->number=sum;
-    
+    if (a->number + b->number >= 10) {
+        sum = a->number + b->number - 10;
+        carry = 1;
+    } else {
+        sum = a->number + b->number;
+        carry = 0;
+    }
+    temp->next = NULL;
+    temp->previous = NULL;
+    temp->number = sum;
 
-    while(a->previous!=NULL || b->previous!=NULL){
-        if(a->previous==NULL){
-            a->number=0;
-        }
-        else a=a->previous;
 
-        if(b->previous==NULL){
-            b->number=0;
-        }
-        else b=b->previous;
-        
-        big_int *new_node=(big_int*)malloc(sizeof(big_int));
+    while (a->previous != NULL || b->previous != NULL) {
+        if (a->previous == NULL) {
+            a->number = 0;
+        } else a = a->previous;
+
+        if (b->previous == NULL) {
+            b->number = 0;
+        } else b = b->previous;
+
+        big_int *new_node = (big_int *) malloc(sizeof(big_int));
         memory_Allocation_Check(new_node);
-        if(carry==1){
-            char imaginary_sum=a->number;
-            a->number=imaginary_sum+1;
-            carry=0;
+        if (carry == 1) {
+            char imaginary_sum = a->number;
+            a->number = imaginary_sum + 1;
+            carry = 0;
         }
-        if(a->number+b->number>=10){
-            sum=a->number+ b->number-10;
-            carry=1;
+        if (a->number + b->number >= 10) {
+            sum = a->number + b->number - 10;
+            carry = 1;
+        } else {
+            sum = a->number + b->number;
+            carry = 0;
         }
-        else {
-            sum=a->number+ b->number;
-            carry=0;
-        }
-        new_node->number=sum;
-        new_node->next=temp;
-        temp->previous=new_node;
-        new_node->previous=NULL;
-        temp=new_node;
+        new_node->number = sum;
+        new_node->next = temp;
+        temp->previous = new_node;
+        new_node->previous = NULL;
+        temp = new_node;
     }
-    if(carry==1){
-        big_int *new_node=(big_int*)malloc(sizeof(big_int));
+    if (carry == 1) {
+        big_int *new_node = (big_int *) malloc(sizeof(big_int));
         memory_Allocation_Check(new_node);
-        new_node->number=1;
-        new_node->next=temp;
-        temp->previous=new_node;
-        new_node->previous=NULL;
-        temp=new_node;
+        new_node->number = 1;
+        new_node->next = temp;
+        temp->previous = new_node;
+        new_node->previous = NULL;
+        temp = new_node;
     }
-    while(temp->number==0 && temp->next!=NULL) {
-        big_int *fake=NULL;
-        fake=temp;
-        fake=fake->next;
+    while (temp->number == 0 && temp->next != NULL) {
+        big_int *fake = NULL;
+        fake = temp;
+        fake = fake->next;
         free(temp);
-        temp=fake;
+        temp = fake;
     }
-    if(sign==0)
+    if (sign == 0)
         return temp;
     else {
-        temp->number=-1*temp->number;
+        temp->number = -1 * temp->number;
         return temp;
     }
 }
 
-void free_big_int(big_int *a){
-    big_int* current = a;
-    while( current != NULL ) {
-        big_int* next = current->next;
-        free( current );
+void free_big_int(big_int *a) {
+    big_int *current = a;
+    while (current != NULL) {
+        big_int *next = current->next;
+        free(current);
         current = next;
     }
-    return;
 }
 
-big_int *multiplication(big_int *a,big_int *b){
+big_int *multiply_int(big_int *a, big_int *b) {
 
-    int zero=0;
-    big_int *temp=(big_int*)malloc(sizeof(big_int));
+    int zero = 0;
+    big_int *temp = (big_int *) malloc(sizeof(big_int));
     memory_Allocation_Check(temp);
-    big_int *answer=(big_int*)malloc(sizeof(big_int));
+    big_int *answer = (big_int *) malloc(sizeof(big_int));
     memory_Allocation_Check(answer);
-    big_int *fake_answer=(big_int*)malloc(sizeof(big_int));
-    fake_answer=NULL;
-    char sum=0;
-    int carry=0;
-    int sign=0;
-    if(a->number<0 && b->number<0) {
-        sign=0;
-        a->number=-1*a->number;
-        b->number=-1*b->number;
-    }
-    else if(a->number>0 && b->number<0) {
-        sign=1;
-        b->number=-1*b->number;
-    }
-    else if(a->number<0 && b->number>0) {
-        sign=1;
-        a->number=-1*a->number;
+    big_int *fake_answer = (big_int *) malloc(sizeof(big_int));
+    fake_answer = NULL;
+    char sum = 0;
+    int carry = 0;
+    int sign = 0;
+    if (a->number < 0 && b->number < 0) {
+        sign = 0;
+        a->number = -1 * a->number;
+        b->number = -1 * b->number;
+    } else if (a->number > 0 && b->number < 0) {
+        sign = 1;
+        b->number = -1 * b->number;
+    } else if (a->number < 0 && b->number > 0) {
+        sign = 1;
+        a->number = -1 * a->number;
     }
     //go to the beggining
-    while(a->next!=NULL){
-        a=a->next;
+    while (a->next != NULL) {
+        a = a->next;
     }
-    while(b->next!=NULL){
-        b=b->next;
+    while (b->next != NULL) {
+        b = b->next;
     }
 
     //make the first node
-   if(a->number*b->number>=10){
-       int counter= a->number*b->number;
-       while(counter>=10){
-           carry++;
-           counter-=10;
-       }
-        sum=counter;
+    if (a->number * b->number >= 10) {
+        char counter = a->number * b->number;
+        while (counter >= 10) {
+            carry++;
+            counter -= 10;
         }
-        else {
-            sum=a->number* b->number;
-            carry=0;
-        }
-        temp->next=NULL;
-        temp->previous=NULL;
-        temp->number=sum;
+        sum = counter;
+    } else {
+        sum = a->number * b->number;
+        carry = 0;
+    }
+    temp->next = NULL;
+    temp->previous = NULL;
+    temp->number = sum;
 
-    //multiplication algorithm   
-    sum=0; 
+    //multiply_int algorithm
+    sum = 0;
 
-    answer->next=NULL;
-    answer->previous=NULL;
-    answer->number=0;
-    
-    do{
-        
-        if(zero>0) {
-            b=b->previous;
-            int fake=zero;
-            
-            temp=(big_int*)malloc(sizeof(big_int));
-            temp->next=NULL;
-            temp->previous= NULL;
-            temp->number= 0;
+    answer->next = NULL;
+    answer->previous = NULL;
+    answer->number = 0;
 
-            while(fake>1){
-                big_int *zero = (big_int*)malloc(sizeof(big_int));
-                zero->next=temp;
-                zero->previous=NULL;
-                temp->previous=zero;
-                zero->number=0;
-                temp=zero;
+    do {
+
+        if (zero > 0) {
+            b = b->previous;
+            int fake = zero;
+
+            temp = (big_int *) malloc(sizeof(big_int));
+            temp->next = NULL;
+            temp->previous = NULL;
+            temp->number = 0;
+
+            while (fake > 1) {
+                big_int *zero = (big_int *) malloc(sizeof(big_int));
+                zero->next = temp;
+                zero->previous = NULL;
+                temp->previous = zero;
+                zero->number = 0;
+                temp = zero;
                 fake--;
             }
-            
+
             ///here lies the forbiden code of laziness
-            if(a->number*b->number>=10){
-                int counter= a->number*b->number;
-                while(counter>=10){
+            if (a->number * b->number >= 10) {
+                int counter = a->number * b->number;
+                while (counter >= 10) {
                     carry++;
-                    counter-=10;
+                    counter -= 10;
                 }
-                 sum=counter;
-             }
-             else {
-                 sum=a->number* b->number;
-                 carry=0;
-             }
-             big_int *new_node=(big_int*)malloc(sizeof(big_int));
-             new_node->next=temp;
-             new_node->previous=NULL;
-             temp->previous=new_node;
-             new_node->number=sum;
-             temp=new_node;
-             sum=0;
+                sum = counter;
+            } else {
+                sum = a->number * b->number;
+                carry = 0;
+            }
+            big_int *new_node = (big_int *) malloc(sizeof(big_int));
+            new_node->next = temp;
+            new_node->previous = NULL;
+            temp->previous = new_node;
+            new_node->number = sum;
+            temp = new_node;
+            sum = 0;
             ///here lies the forbiden code of laziness
         }
 
-        while(a->previous!=NULL){
-            a=a->previous;
-            big_int *new_node=(big_int*)malloc(sizeof(big_int));
+        while (a->previous != NULL) {
+            a = a->previous;
+            big_int *new_node = (big_int *) malloc(sizeof(big_int));
             memory_Allocation_Check(new_node);
-            if(carry>0){
-                sum=carry;
-                carry=0;
+            if (carry > 0) {
+                sum = carry;
+                carry = 0;
             }
-            if(a->number*b->number+sum>=10){
-                 int counter= a->number*b->number+sum;
-                 while(counter>=10){
+            if (a->number * b->number + sum >= 10) {
+                int counter = a->number * b->number + sum;
+                while (counter >= 10) {
                     carry++;
-                    counter-=10;
-                 }
-                sum=counter;
-             }
-             else {
-                sum+=a->number * b->number;
-                carry=0;
-             }
-            new_node->number=sum;
-            new_node->next=temp;
-            temp->previous=new_node;///changes
-            new_node->previous=NULL;
-            temp=new_node;
+                    counter -= 10;
+                }
+                sum = counter;
+            } else {
+                sum += a->number * b->number;
+                carry = 0;
+            }
+            new_node->number = sum;
+            new_node->next = temp;
+            temp->previous = new_node;///changes
+            new_node->previous = NULL;
+            temp = new_node;
 
-            sum=0;
+            sum = 0;
         }
-         if(carry>0){
-             big_int *new_node=(big_int*)malloc(sizeof(big_int));
-             memory_Allocation_Check(new_node);
-             new_node->number=carry;
-             new_node->next=temp;
-             temp->previous=new_node;///changes
-             new_node->previous=NULL;
-             temp=new_node;
-         }
+        if (carry > 0) {
+            big_int *new_node = (big_int *) malloc(sizeof(big_int));
+            memory_Allocation_Check(new_node);
+            new_node->number = carry;
+            new_node->next = temp;
+            temp->previous = new_node;///changes
+            new_node->previous = NULL;
+            temp = new_node;
+        }
 
-        fake_answer=NULL;
-        fake_answer=addition(temp,answer);
+        fake_answer = NULL;
+        fake_answer = add_int(temp, answer);
         free_big_int(answer);
 
-        copy_int(fake_answer,&answer);
+        copy_int(fake_answer, &answer);
         //print_int(answer);
 
 
         free_big_int(fake_answer);
 
-        while(a->next!=NULL) {
-            a=a->next;
+        while (a->next != NULL) {
+            a = a->next;
         }
-        
+
         free_big_int(temp);
-        carry=0;
+        carry = 0;
         zero++;
-    }while(b->previous!=NULL);
+    } while (b->previous != NULL);
 
 
-    if(sign==0)
-    return answer;
+    if (sign == 0)
+        return answer;
     else {
-        answer->number=-1*answer->number;
+        answer->number = -1 * answer->number;
         return answer;
     }
 }
 
 
-
-void print_int(big_int *head){
+void print_int(big_int *head) {
     big_int *current_node = head;
-    if(current_node == NULL){
+    if (current_node == NULL) {
         printf("No data given\n");
         return;
     }
 
-    while(current_node != NULL){
-        if(current_node == head && current_node->number < 0){
+    while (current_node != NULL) {
+        if (current_node == head && current_node->number < 0) {
             printf("-%c", 0 - (current_node->number) + 48);
         } else {
-            printf("%c", (current_node->number)+48);
+            printf("%c", (current_node->number) + 48);
         }
         current_node = current_node->next;
     }
@@ -408,16 +394,16 @@ void print_int(big_int *head){
 //    printf("\n");
 }
 
-void copy_int(big_int *original, big_int **copy){
-    big_int* last_node = (big_int*) malloc (sizeof(big_int));
+void copy_int(big_int *original, big_int **copy) {
+    big_int *last_node = (big_int *) malloc(sizeof(big_int));
     memory_Allocation_Check(last_node);
     last_node->number = original->number;
     last_node->next = NULL;
     last_node->previous = NULL;
     *copy = last_node;
-    while(original->next != NULL){
+    while (original->next != NULL) {
         original = original->next;
-        big_int* new_node = (big_int*) malloc (sizeof(struct big_int));
+        big_int *new_node = (big_int *) malloc(sizeof(struct big_int));
         memory_Allocation_Check(new_node);
         new_node->number = original->number;
         new_node->previous = last_node;
@@ -427,18 +413,18 @@ void copy_int(big_int *original, big_int **copy){
     }
 }
 
-void pure_subtraction(big_int *bigger, big_int* smaller){
+void pure_subtraction(big_int *bigger, big_int *smaller) {
 
     int carry = 0;
     char bigger_num;
     char smaller_num;
-    while(smaller->previous != NULL){
+    while (smaller->previous != NULL) {
         bigger_num = bigger->number;
         smaller_num = smaller->number;
 
-        if(carry > 0){
+        if (carry > 0) {
             --carry;
-            if(bigger_num == 0){
+            if (bigger_num == 0) {
                 ++carry;
                 bigger_num += 9;
             } else {
@@ -446,7 +432,7 @@ void pure_subtraction(big_int *bigger, big_int* smaller){
             }
         }
 
-        if(smaller_num > bigger_num){
+        if (smaller_num > bigger_num) {
             ++carry;
             bigger_num += 10;
         }
@@ -459,25 +445,25 @@ void pure_subtraction(big_int *bigger, big_int* smaller){
     bigger_num = bigger->number;
     smaller_num = smaller->number;
 
-    if(carry > 0){
+    if (carry > 0) {
         --carry;
-        if(bigger_num == 0){
+        if (bigger_num == 0) {
             ++carry;
             bigger_num += 9;
         } else {
             --bigger_num;
         }
     }
-    if(smaller_num > bigger_num){
+    if (smaller_num > bigger_num) {
         ++carry;
         bigger_num += 10;
     }
     bigger->number = bigger_num - smaller_num;
 
-    while(carry != 0){
+    while (carry != 0) {
         bigger = bigger->previous;
         --carry;
-        if(bigger->number == 0){
+        if (bigger->number == 0) {
             ++carry;
             bigger->number += 9;
             //bigger = bigger->previous;
@@ -486,13 +472,13 @@ void pure_subtraction(big_int *bigger, big_int* smaller){
         }
     }
 
-    while(bigger->previous != NULL){
+    while (bigger->previous != NULL) {
         bigger = bigger->previous;
     }
 }
 
-big_int* subtract_big_int(big_int* first_number, big_int* second_number){
-    big_int *difference = malloc(sizeof (big_int));
+big_int *subtract_int(big_int *first_number, big_int *second_number) {
+    big_int *difference = malloc(sizeof(big_int));
     remove_zeroes(&first_number);
     remove_zeroes(&second_number);
 
@@ -507,44 +493,44 @@ big_int* subtract_big_int(big_int* first_number, big_int* second_number){
     //TYPE: 20 - both minus, first is smaller than second
     //TYPE: 200 - both minus, second is smaller
 
-    if(first_number->number >= 0 && second_number->number < 0){//10-(-1) or 0 -(-1)
+    if (first_number->number >= 0 && second_number->number < 0) {//10-(-1) or 0 -(-1)
         second_copy->number = 0 - second_copy->number;
-        difference = addition(first_copy, second_copy);
+        difference = add_int(first_copy, second_copy);
         free(first_copy);
         free(second_copy);
         return difference;
-    } else if(first_number->number < 0 && second_number->number > 0){//-10-1 -> 10 + 1 ->11 -> -11
+    } else if (first_number->number < 0 && second_number->number > 0) {//-10-1 -> 10 + 1 ->11 -> -11
         first_copy->number = 0 - first_copy->number;//-10->10
-        difference = addition(first_copy, second_copy);
+        difference = add_int(first_copy, second_copy);
         difference->number = 0 - difference->number;
         free(first_copy);
         free(second_copy);
         return difference;
-    } else if(first_number->number < 0 && second_number->number < 0){//-10-(-1)->-10+1->10-1->9->-9
+    } else if (first_number->number < 0 && second_number->number < 0) {//-10-(-1)->-10+1->10-1->9->-9
         first_copy->number = 0 - first_copy->number;//-10->10
         second_copy->number = 0 - second_copy->number;//-1->1
         ++type;//TEMP
         //10 -1 = 9, then turn 9 to -9
     }
 
-    big_int *first_tmp = malloc(sizeof ( big_int));
+    big_int *first_tmp = malloc(sizeof(big_int));
     memory_Allocation_Check(first_tmp);
     first_tmp = first_copy;
 
-    big_int *second_tmp = malloc(sizeof ( big_int));
+    big_int *second_tmp = malloc(sizeof(big_int));
     memory_Allocation_Check(second_tmp);
     second_tmp = second_copy;
     //see if first is smaller than second
-    while (first_tmp->next != NULL || second_tmp->next != NULL){
-        if(first_tmp->next == NULL){
+    while (first_tmp->next != NULL || second_tmp->next != NULL) {
+        if (first_tmp->next == NULL) {
             type *= 10;
-            while (second_tmp->next != NULL){
+            while (second_tmp->next != NULL) {
                 second_tmp = second_tmp->next;
             }
             break;
-        }else if(second_tmp->next == NULL){
+        } else if (second_tmp->next == NULL) {
             type *= 100;
-            while (first_tmp->next != NULL){
+            while (first_tmp->next != NULL) {
                 first_tmp = first_tmp->next;
             }
             break;
@@ -554,19 +540,19 @@ big_int* subtract_big_int(big_int* first_number, big_int* second_number){
         second_tmp = second_tmp->next;
     }
 
-    if(type < 10){
-        if(first_copy->next == NULL && second_copy->next == NULL){
-            if(first_copy->number > second_copy->number){
+    if (type < 10) {
+        if (first_copy->next == NULL && second_copy->next == NULL) {
+            if (first_copy->number > second_copy->number) {
                 difference->number = first_copy->number - second_copy->number;
-                if(type == 2){
+                if (type == 2) {
                     difference->number = 0 - difference->number;
                 }
                 difference->next = NULL;
                 difference->previous = NULL;
                 return difference;
-            } else if (first_copy->number < second_copy->number){
+            } else if (first_copy->number < second_copy->number) {
                 difference->number = first_copy->number - second_copy->number;
-                if(type == 2){
+                if (type == 2) {
                     difference->number = 0 - difference->number;
                 }
                 difference->next = NULL;
@@ -580,27 +566,27 @@ big_int* subtract_big_int(big_int* first_number, big_int* second_number){
             }
         }
 
-        while (first_copy->next != NULL || second_copy->next != NULL){
-            if(first_copy->number > second_copy->number){
+        while (first_copy->next != NULL || second_copy->next != NULL) {
+            if (first_copy->number > second_copy->number) {
                 type *= 100;
                 break;
-            } else if(first_copy->number < second_copy->number){
+            } else if (first_copy->number < second_copy->number) {
                 type *= 10;
                 break;
-            } else{
+            } else {
                 first_copy = first_copy->next;
                 second_copy = second_copy->next;
-                if(first_copy->next == NULL && second_copy->next == NULL){
-                    if(first_copy->number == second_copy->number){
+                if (first_copy->next == NULL && second_copy->next == NULL) {
+                    if (first_copy->number == second_copy->number) {
                         difference->number = 0;
                         difference->next = NULL;
                         difference->previous = NULL;
                         return difference;
-                    }else {
-                        if(first_copy->number > second_copy->number){
+                    } else {
+                        if (first_copy->number > second_copy->number) {
                             type *= 100;
                             break;
-                        } else{
+                        } else {
                             type *= 10;
                             break;
                         }
@@ -610,10 +596,10 @@ big_int* subtract_big_int(big_int* first_number, big_int* second_number){
         }
     }
 
-    while(first_copy->previous != NULL){
+    while (first_copy->previous != NULL) {
         first_copy = first_copy->previous;
     }
-    while(second_copy->previous != NULL){
+    while (second_copy->previous != NULL) {
         second_copy = second_copy->previous;
     }
 
@@ -650,48 +636,48 @@ big_int* subtract_big_int(big_int* first_number, big_int* second_number){
     }
 }
 
-int check_if_bigger(big_int* first, big_int* second){
-    while(first->previous != NULL){
+int check_if_bigger(big_int *first, big_int *second) {
+    while (first->previous != NULL) {
         first = first->previous;
     }
-    while(second->previous != NULL){
+    while (second->previous != NULL) {
         second = second->previous;
     }
     remove_zeroes(&first);
     remove_zeroes(&second);
 
     //check by length
-    while(first->next != NULL){
-        if(second->next == NULL){
+    while (first->next != NULL) {
+        if (second->next == NULL) {
             return 1;
         }
         first = first->next;
         second = second->next;
     }
-    if(second->next != NULL){
+    if (second->next != NULL) {
         return 0;
     }
 
     //rewind list
-    while(first->previous != NULL){
+    while (first->previous != NULL) {
         first = first->previous;
     }
-    while(second->previous != NULL){
+    while (second->previous != NULL) {
         second = second->previous;
     }
 
     //check by value
-    while(second->next != NULL){
-        if(first->number < second->number){
+    while (second->next != NULL) {
+        if (first->number < second->number) {
             return 0;
-        } else if(first->number > second->number){
+        } else if (first->number > second->number) {
             return 1;
         }
         first = first->next;
         second = second->next;
     }
 
-    if(first->number > second->number){
+    if (first->number > second->number) {
         return 1;
     } else {
         return 0;
@@ -699,10 +685,10 @@ int check_if_bigger(big_int* first, big_int* second){
 
 }
 
-void append(struct big_int ** head_value, char new_data){
-    big_int* new_item = (big_int*) malloc (sizeof(big_int));
+void append(struct big_int **head_value, char new_data) {
+    big_int *new_item = (big_int *) malloc(sizeof(big_int));
     memory_Allocation_Check(new_item);
-    big_int* last = *head_value;
+    big_int *last = *head_value;
 
     new_item->number = new_data;
     new_item->next = NULL;
@@ -712,7 +698,7 @@ void append(struct big_int ** head_value, char new_data){
         *head_value = new_item;
         return;
     }
-    while (last->next != NULL){
+    while (last->next != NULL) {
         last = last->next;
     }
 
@@ -720,46 +706,46 @@ void append(struct big_int ** head_value, char new_data){
     new_item->previous = last;
 }
 
-int check_if_equal(big_int* first, big_int* second){
-    while(first->previous != NULL){
+int check_if_equal(big_int *first, big_int *second) {
+    while (first->previous != NULL) {
         first = first->previous;
     }
-    while(second->previous != NULL){
+    while (second->previous != NULL) {
         second = second->previous;
     }
     remove_zeroes(&first);
     remove_zeroes(&second);
 
     //check by length
-    while(first->next != NULL){
-        if(second->next == NULL){
+    while (first->next != NULL) {
+        if (second->next == NULL) {
             return 0;
         }
         first = first->next;
         second = second->next;
     }
-    if(second->next != NULL){
+    if (second->next != NULL) {
         return 0;
     }
 
     //rewind list
-    while(first->previous != NULL){
+    while (first->previous != NULL) {
         first = first->previous;
     }
-    while(second->previous != NULL){
+    while (second->previous != NULL) {
         second = second->previous;
     }
 
     //check by value
-    while(second->next != NULL){
-        if(first->number != second->number){
+    while (second->next != NULL) {
+        if (first->number != second->number) {
             return 0;
         }
         first = first->next;
         second = second->next;
     }
 
-    if(first->number != second->number){
+    if (first->number != second->number) {
         return 0;
     } else {
         return 1;
@@ -767,7 +753,7 @@ int check_if_equal(big_int* first, big_int* second){
 }
 
 
-big_int* divide_big_int(big_int* dividend, big_int* divisor){
+big_int *divide_int(big_int *dividend, big_int *divisor) {
     big_int *current_quotient = NULL;
     big_int *save_position = NULL;
 
@@ -780,25 +766,25 @@ big_int* divide_big_int(big_int* dividend, big_int* divisor){
     remove_zeroes(&divisor_copy);
 
     int sign = 0;
-    if(divisor_copy->number < 0){
+    if (divisor_copy->number < 0) {
         divisor_copy->number = 0 - divisor_copy->number;
         ++sign;
     }
 
-    if(dividend_copy->number < 0){
+    if (dividend_copy->number < 0) {
         dividend_copy->number = 0 - dividend_copy->number;
         ++sign;
     }
 
-    if(dividend_copy->number == 0){
+    if (dividend_copy->number == 0) {
         append(&current_quotient, 0);
-        free(dividend_copy);
-        free(divisor_copy);
+        delete_int(dividend_copy);
+        delete_int(divisor_copy);
         return current_quotient;
-    }else if(divisor_copy->number == 0){
+    } else if (divisor_copy->number == 0) {
         fprintf(stderr, "Division by zero!\n");
-        free(dividend_copy);
-        free(divisor_copy);
+        delete_int(dividend_copy);
+        delete_int(divisor_copy);
         append(&current_quotient, 0);
         return current_quotient;
     }
@@ -807,24 +793,25 @@ big_int* divide_big_int(big_int* dividend, big_int* divisor){
     int first_iteration = 1;
 
 
-    while(division){
+    while (division) {
         //make sure we start from number start
-        while (divisor_copy->previous != NULL){
+        while (divisor_copy->previous != NULL) {
             divisor_copy = divisor_copy->previous;
         }
 
-        if(dividend_copy == NULL){
+        if (dividend_copy == NULL) {
             break;
         }
         int too_small = 0;
-        if(first_iteration){
+        if (first_iteration) {
             //set number for first time iteration
             save_position = dividend_copy->next;
             dividend_copy->next = NULL;
 
-            while(check_if_bigger(dividend_copy, divisor_copy) != 1 && check_if_equal(dividend_copy, divisor_copy) != 1){
+            while (check_if_bigger(dividend_copy, divisor_copy) != 1 &&
+                   check_if_equal(dividend_copy, divisor_copy) != 1) {
                 //move by one
-                if(save_position == NULL){
+                if (save_position == NULL) {
                     too_small = 1;
                     break;
                 }
@@ -835,7 +822,7 @@ big_int* divide_big_int(big_int* dividend, big_int* divisor){
 
             }
 
-            if(too_small){
+            if (too_small) {
                 append(&current_quotient, 0);
                 break;
             }
@@ -846,10 +833,11 @@ big_int* divide_big_int(big_int* dividend, big_int* divisor){
             save_position = dividend_copy->next;
             dividend_copy->next = NULL;
 
-            while(check_if_bigger(dividend_copy, divisor_copy) != 1 && check_if_equal(dividend_copy, divisor_copy) != 1){
+            while (check_if_bigger(dividend_copy, divisor_copy) != 1 &&
+                   check_if_equal(dividend_copy, divisor_copy) != 1) {
                 append(&current_quotient, 0);
                 //move by one
-                if(save_position == NULL){
+                if (save_position == NULL) {
                     too_small = 1;
                     break;
                 }
@@ -859,7 +847,7 @@ big_int* divide_big_int(big_int* dividend, big_int* divisor){
                 dividend_copy->next = NULL;
             }
 
-            if(too_small){
+            if (too_small) {
                 break;
             }
         }
@@ -867,18 +855,18 @@ big_int* divide_big_int(big_int* dividend, big_int* divisor){
         int bigger = 1;
         char count = 0;
         //subtract till smaller
-        while(bigger){
+        while (bigger) {
             //rewind
-            while(dividend_copy->previous != NULL){
-                dividend_copy= dividend_copy->previous;
+            while (dividend_copy->previous != NULL) {
+                dividend_copy = dividend_copy->previous;
             }
-            while(divisor_copy->previous != NULL){
-                divisor_copy= divisor_copy->previous;
+            while (divisor_copy->previous != NULL) {
+                divisor_copy = divisor_copy->previous;
             }
-            dividend_copy = subtract_big_int(dividend_copy, divisor_copy);
+            dividend_copy = subtract_int(dividend_copy, divisor_copy);
             ++count;
 
-            if(check_if_bigger(dividend_copy, divisor_copy) || check_if_equal(dividend_copy, divisor_copy)){
+            if (check_if_bigger(dividend_copy, divisor_copy) || check_if_equal(dividend_copy, divisor_copy)) {
                 bigger = 1;
             } else {
                 bigger = 0;
@@ -886,23 +874,27 @@ big_int* divide_big_int(big_int* dividend, big_int* divisor){
         }
 
         append(&current_quotient, count);
-        while (dividend_copy->next != NULL){
+
+        while (dividend_copy->next != NULL) {
             dividend_copy = dividend_copy->next;
         }
-        if(save_position == NULL){
+
+        if (save_position == NULL) {
             break;
         }
+
         dividend_copy->next = save_position;
         save_position->previous = dividend_copy;
 
     }
-    while(current_quotient->previous!=NULL){
+    while (current_quotient->previous != NULL) {
         current_quotient = current_quotient->previous;
     }
-    if(sign == 1){
+    if (sign == 1) {
         current_quotient->number = 0 - current_quotient->number;
     }
-    free(dividend_copy);
-    free(divisor_copy);
+
+    delete_int(dividend_copy);
+    delete_int(divisor_copy);
     return current_quotient;
 }
