@@ -115,12 +115,18 @@ big_int *add_int(big_int *a_original, big_int *b_original) {
         b->number = -1 * b->number;
         big_int *c = NULL;
         c = subtract_int(a, b);
+        //TEMP
+        delete_int(a);
+        delete_int(b);
         return c;
     } else if (a->number < 0 && b->number > 0) {
         sign = 1;
         a->number = -1 * a->number;
         big_int *c = NULL;
         c = subtract_int(a, b);
+        //TEMP
+        delete_int(a);
+        delete_int(b);
         return c;
     }
 
@@ -189,10 +195,17 @@ big_int *add_int(big_int *a_original, big_int *b_original) {
         free(temp);
         temp = fake;
     }
-    if (sign == 0)
+    if (sign == 0){
+        //TEMP
+        delete_int(a);
+        delete_int(b);
         return temp;
+    }
     else {
         temp->number = -1 * temp->number;
+        //TEMP
+        delete_int(a);
+        delete_int(b);
         return temp;
     }
 }
