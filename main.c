@@ -6,15 +6,18 @@ int main() {
     big_int *b = NULL;
     big_int *c = NULL;
 
-    assign_int(&a, "11325");
+    assign_int(&a, "0");
     print_int(a);
-    assign_int(&b, "12");
+    assign_int(&b, "1");
     print_int(b);
-    c = subtract_int(a, b);
-    print_int(c);
-    c = multiply_int(a, b);
-    print_int(c);
-    c = divide_int(a, b);
-    print_int(c);
+
+    for(int i = 0; i < 20; i++){
+        if (i == 10){
+            printf("ok");
+        }
+        print_int(a);
+        print_int(b);
+        a = add_int(a, b);
+    }
     return 0;
 }

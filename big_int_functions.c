@@ -94,7 +94,14 @@ void assign_int(big_int **head, char *number) {
 }
 
 
-big_int *add_int(big_int *a, big_int *b) {
+big_int *add_int(big_int *a_original, big_int *b_original) {
+    big_int *a = NULL;
+    copy_int(a_original, &a);
+
+    big_int *b = NULL;
+    copy_int(b_original, &b);
+
+
     big_int *temp = (big_int *) malloc(sizeof(big_int));
     memory_Allocation_Check(temp);
     char sum;
