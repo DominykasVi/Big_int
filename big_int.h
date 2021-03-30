@@ -24,7 +24,7 @@ typedef struct big_int {
 void assign_int(big_int **head, char *number);
 big_int *subtract_int(big_int *first_number, big_int *second_number);
 big_int *divide_int(big_int *dividend, big_int *divisor);
-big_int *add_int(big_int *a, big_int *b);
+big_int *add_int(big_int *a_original, big_int *b_original);
 big_int *multiply_int(big_int *a, big_int *b);
 void print_int(big_int *head);
 void delete_int(big_int *head);
